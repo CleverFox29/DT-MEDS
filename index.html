@@ -1,330 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Automatic Medicine Dispenser – Functional Prototype</title>
+    <meta charset="UTF-8">
+    <title>Automatic Medicine Dispenser – Functional Prototype</title>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  padding: 20px;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
 
-h1, h2, h3 { text-align: center; }
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+        }
 
-#status {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 15px;
-}
+        #status {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
 
-#led {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: gray;
-}
+        #led {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: gray;
+        }
 
-#buzzer {
-  display: none;
-  color: red;
-  font-weight: bold;
-}
+        #buzzer {
+            display: none;
+            color: red;
+            font-weight: bold;
+        }
 
-/* ===== Analog Clock ===== */
-#clockWrapper {
-  width: 220px;
-  margin: 20px auto;
-}
+        /* ===== Analog Clock ===== */
+        #clockWrapper {
+            width: 220px;
+            margin: 20px auto;
+        }
 
-#clock {
-  position: relative;
-  width: 180px;
-  height: 180px;
-  margin: auto;
-  background: #fff;
-  border: 6px solid #333;
-  border-radius: 50%;
-}
+        #clock {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: auto;
+            background: #fff;
+            border: 6px solid #333;
+            border-radius: 50%;
+        }
 
-.clock-number {
-  position: absolute;
-  font-size: 13px;
-  font-weight: bold;
-  transform: translate(-50%, -50%);
-}
+        .clock-number {
+            position: absolute;
+            font-size: 13px;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+        }
 
-.hand {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform-origin: 0% 50%;
-  background: black;
-}
+        .hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 50%;
+            background: black;
+        }
 
-.hour { width: 35%; height: 4px; }
-.minute { width: 45%; height: 3px; }
-.second { width: 48%; height: 1px; background: red; }
+        .hour {
+            width: 35%;
+            height: 4px;
+        }
 
-.center {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: black;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+        .minute {
+            width: 45%;
+            height: 3px;
+        }
 
-/* ===== Drawers ===== */
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+        .second {
+            width: 48%;
+            height: 1px;
+            background: red;
+        }
 
-.drawer {
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 12px;
-  position: relative;
-}
+        .center {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: black;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-.drawer.active {
-  border-color: green;
-  background: #eaffea;
-}
+        /* ===== Drawers ===== */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
 
-.drawer.taken {
-  border-color: #999;
-  background: #f0f0f0;
-}
+        .drawer {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+        }
 
-.time-block {
-  border-top: 1px solid #ddd;
-  margin-top: 6px;
-  padding-top: 6px;
-}
+        .drawer.active {
+            border-color: green;
+            background: #eaffea;
+        }
 
-label { display: block; margin: 4px 0; }
+        .drawer.taken {
+            border-color: #999;
+            background: #f0f0f0;
+        }
 
-.controls, .simulation {
-  text-align: center;
-  margin-top: 15px;
-}
+        .time-block {
+            border-top: 1px solid #ddd;
+            margin-top: 6px;
+            padding-top: 6px;
+        }
 
-button {
-  margin: 5px;
-  padding: 8px 14px;
-  font-size: 14px;
-  cursor: pointer;
-}
-</style>
+        label {
+            display: block;
+            margin: 4px 0;
+        }
+
+        .controls,
+        .simulation {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 14px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>Automatic Medicine Dispenser</h1>
-<p style="text-align:center;">Software Prototype with Time Simulation</p>
+    <h1>EasyDose</h1>
+    <p style="text-align:center;">Software Prototype with Time Simulation</p>
 
-<div id="status">
-  <div id="led"></div>
-  <div id="buzzer">🔊 TAKE MEDICINE</div>
-</div>
+    <div id="status">
+        <div id="led"></div>
+        <div id="buzzer">🔊 TAKE MEDICINE</div>
+    </div>
 
-<h2>Analog Alarm Clock (Current Time)</h2>
+    <h2>Analog Alarm Clock (Current Time)</h2>
 
-<div id="clockWrapper">
-  <div id="clock"></div>
-</div>
+    <div id="clockWrapper">
+        <div id="clock"></div>
+    </div>
 
-<h3>Define Day Periods</h3>
-<div style="text-align:center;">
-  Morning <input type="time" id="morningTime" value="08:00"><br>
-  Afternoon <input type="time" id="afternoonTime" value="14:00"><br>
-  Night <input type="time" id="nightTime" value="21:00">
-</div>
+    <h3>Define Day Periods</h3>
+    <div style="text-align:center;">
+        Morning <input type="time" id="morningTime" value="08:00"><br>
+        Afternoon <input type="time" id="afternoonTime" value="14:00"><br>
+        Night <input type="time" id="nightTime" value="21:00">
+    </div>
 
-<hr>
+    <hr>
 
-<div class="container" id="drawers"></div>
+    <div class="container" id="drawers"></div>
 
-<div class="controls">
-  <label>
-    <input type="checkbox" id="lock" onchange="toggleLock()">
-    Child Lock
-  </label>
-</div>
+    <div class="controls">
+        <label>
+            <input type="checkbox" id="lock" onchange="toggleLock()">
+            Child Lock
+        </label>
+    </div>
 
-<hr>
+    <hr>
 
-<h3>Simulate Daily Events</h3>
-<div class="simulation">
-  <button onclick="simulateEvent(7,45,'morning','before')">Before Breakfast</button>
-  <button onclick="simulateEvent(8,30,'morning','after')">After Breakfast</button>
-  <button onclick="simulateEvent(13,30,'afternoon','before')">Before Lunch</button>
-  <button onclick="simulateEvent(14,30,'afternoon','after')">After Lunch</button>
-  <button onclick="simulateEvent(19,30,'night','before')">Before Dinner</button>
-  <button onclick="simulateEvent(21,0,'night','after')">After Dinner</button>
-  <br>
-  <button onclick="returnToLiveTime()">Return to Live Time</button>
-</div>
+    <h3>Simulate Daily Events</h3>
+    <div class="simulation">
+        <button onclick="simulateEvent(7,45,'morning','before')">Before Breakfast</button>
+        <button onclick="simulateEvent(8,30,'morning','after')">After Breakfast</button>
+        <button onclick="simulateEvent(13,30,'afternoon','before')">Before Lunch</button>
+        <button onclick="simulateEvent(14,30,'afternoon','after')">After Lunch</button>
+        <button onclick="simulateEvent(19,30,'night','before')">Before Dinner</button>
+        <button onclick="simulateEvent(21,0,'night','after')">After Dinner</button>
+        <br>
+        <button onclick="returnToLiveTime()">Return to Live Time</button>
+    </div>
 
-<script>
-/* ===== CLOCK FACE ===== */
-const clock = document.getElementById("clock");
-for (let i = 1; i <= 12; i++) {
-  const angle = (i * 30 - 90) * Math.PI / 180;
-  const x = 90 + 70 * Math.cos(angle);
-  const y = 90 + 70 * Math.sin(angle);
-  clock.innerHTML += `<div class="clock-number" style="left:${x}px;top:${y}px">${i}</div>`;
-}
-clock.innerHTML += `
+    <script>
+        /* ===== CLOCK FACE ===== */
+        const clock = document.getElementById("clock");
+        for (let i = 1; i <= 12; i++) {
+            const angle = (i * 30 - 90) * Math.PI / 180;
+            const x = 90 + 70 * Math.cos(angle);
+            const y = 90 + 70 * Math.sin(angle);
+            clock.innerHTML += `<div class="clock-number" style="left:${x}px;top:${y}px">${i}</div>`;
+        }
+        clock.innerHTML += `
   <div class="hand hour" id="hourHand"></div>
   <div class="hand minute" id="minuteHand"></div>
   <div class="hand second" id="secondHand"></div>
   <div class="center"></div>
 `;
 
-/* ===== STATE ===== */
-let simulatedTime = null;
-let simulatedPeriod = null;
-let simulatedFood = null;
+        /* ===== STATE ===== */
+        let simulatedTime = null;
+        let simulatedPeriod = null;
+        let simulatedFood = null;
 
-/* ===== DRAWERS ===== */
-const drawerContainer = document.getElementById("drawers");
-for (let i = 1; i <= 4; i++) {
-  drawerContainer.innerHTML += `
+        /* ===== DRAWERS ===== */
+        const drawerContainer = document.getElementById("drawers");
+        for (let i = 1; i <= 4; i++) {
+            drawerContainer.innerHTML += `
     <div class="drawer" id="drawer${i}">
       <h3>Medicine ${i}</h3>
 
       <div class="time-block">
         <strong>Morning</strong>
         <label><input type="checkbox" name="enable${i}_morning"> Enable</label>
-        <label><input type="radio" name="food${i}_morning" value="before"> Before Food</label>
+        <label><input type="radio" name="food${i}_morning" value="before" checked> Before Food</label>
         <label><input type="radio" name="food${i}_morning" value="after"> After Food</label>
       </div>
 
       <div class="time-block">
         <strong>Afternoon</strong>
-        <label><input type="checkbox" name="enable${i}_afternoon"> Enable</label>
-        <label><input type="radio" name="food${i}_afternoon" value="before"> Before Food</label>
+        <label><input type="checkbox" name="enable${i}_afternoon" > Enable</label>
+        <label><input type="radio" name="food${i}_afternoon" value="before" checked> Before Food</label>
         <label><input type="radio" name="food${i}_afternoon" value="after"> After Food</label>
       </div>
 
       <div class="time-block">
         <strong>Night</strong>
         <label><input type="checkbox" name="enable${i}_night"> Enable</label>
-        <label><input type="radio" name="food${i}_night" value="before"> Before Food</label>
+        <label><input type="radio" name="food${i}_night" value="before" checked> Before Food</label>
         <label><input type="radio" name="food${i}_night" value="after"> After Food</label>
       </div>
 
       <button onclick="openDrawer(${i})">Open Drawer</button>
     </div>
   `;
-}
+        }
 
-/* ===== CHILD LOCK ===== */
-function toggleLock() {
-  const locked = lock.checked;
-  document.querySelectorAll("input").forEach(input => {
-    if (input.id !== "lock") input.disabled = locked;
-  });
-}
+        /* ===== CHILD LOCK ===== */
+        function toggleLock() {
+            const locked = lock.checked;
+            document.querySelectorAll("input").forEach(input => {
+                if (input.id !== "lock") input.disabled = locked;
+            });
+        }
 
-/* ===== CLOCK UPDATE ===== */
-function updateClock() {
-  const now = simulatedTime || new Date();
-  const sec = now.getSeconds();
-  const min = now.getMinutes();
-  const hr = now.getHours() % 12;
+        /* ===== CLOCK UPDATE ===== */
+        function updateClock() {
+            const now = simulatedTime || new Date();
+            const sec = now.getSeconds();
+            const min = now.getMinutes();
+            const hr = now.getHours() % 12;
 
-  secondHand.style.transform = `rotate(${sec * 6}deg)`;
-  minuteHand.style.transform = `rotate(${min * 6 + sec * 0.1}deg)`;
-  hourHand.style.transform = `rotate(${hr * 30 + min * 0.5}deg)`;
-}
-setInterval(updateClock, 1000);
-updateClock();
+            secondHand.style.transform = `rotate(${sec * 6}deg)`;
+            minuteHand.style.transform = `rotate(${min * 6 + sec * 0.1}deg)`;
+            hourHand.style.transform = `rotate(${hr * 30 + min * 0.5}deg)`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-/* ===== PERIOD CHECK ===== */
-setInterval(checkTime, 30000);
-function checkTime() {
-  const now = simulatedTime || new Date();
-  const period = simulatedPeriod || getPeriod(now.getHours(), now.getMinutes());
-  evaluate(period, simulatedFood);
-}
+        /* ===== PERIOD CHECK ===== */
+        setInterval(checkTime, 30000);
+        function checkTime() {
+            const now = simulatedTime || new Date();
+            const period = simulatedPeriod || getPeriod(now.getHours(), now.getMinutes());
+            evaluate(period, simulatedFood);
+        }
 
-function getPeriod(h, m) {
-  const current = h * 60 + m;
-  const morning = toMin(morningTime.value);
-  const afternoon = toMin(afternoonTime.value);
-  const night = toMin(nightTime.value);
+        function getPeriod(h, m) {
+            const current = h * 60 + m;
+            const morning = toMin(morningTime.value);
+            const afternoon = toMin(afternoonTime.value);
+            const night = toMin(nightTime.value);
 
-  if (current >= morning && current < afternoon) return "morning";
-  if (current >= afternoon && current < night) return "afternoon";
-  return "night";
-}
+            if (current >= morning && current < afternoon) return "morning";
+            if (current >= afternoon && current < night) return "afternoon";
+            return "night";
+        }
 
-function toMin(t) {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
+        function toMin(t) {
+            const [h, m] = t.split(":").map(Number);
+            return h * 60 + m;
+        }
 
-/* ===== CORE LOGIC ===== */
-function evaluate(period, food) {
-  let anyActive = false;
+        /* ===== CORE LOGIC ===== */
+        function evaluate(period, food) {
+            let anyActive = false;
 
-  document.querySelectorAll(".drawer").forEach((d, idx) => {
-    const i = idx + 1;
-    d.classList.remove("active");
+            document.querySelectorAll(".drawer").forEach((d, idx) => {
+                const i = idx + 1;
+                d.classList.remove("active");
 
-    const enabled = d.querySelector(`input[name="enable${i}_${period}"]:checked`);
-    const foodMatch = d.querySelector(`input[name="food${i}_${period}"][value="${food}"]:checked`);
+                const enabled = d.querySelector(`input[name="enable${i}_${period}"]:checked`);
+                const foodMatch = d.querySelector(`input[name="food${i}_${period}"][value="${food}"]:checked`);
 
-    if (enabled && foodMatch && !d.classList.contains("taken")) {
-      d.classList.add("active");
-      anyActive = true;
-    }
-  });
+                if (enabled && foodMatch && !d.classList.contains("taken")) {
+                    d.classList.add("active");
+                    anyActive = true;
+                }
+            });
 
-  led.style.background = anyActive ? "red" : "gray";
-  buzzer.style.display = anyActive ? "block" : "none";
-}
+            led.style.background = anyActive ? "red" : "gray";
+            buzzer.style.display = anyActive ? "block" : "none";
+        }
 
-/* ===== DRAWER OPEN ACTION ===== */
-function openDrawer(i) {
-  const d = document.getElementById(`drawer${i}`);
-  d.classList.remove("active");
-  d.classList.add("taken");
+        /* ===== DRAWER OPEN ACTION ===== */
+        function openDrawer(i) {
+            const d = document.getElementById(`drawer${i}`);
+            d.classList.remove("active");
+            d.classList.add("taken");
 
-  // Re-evaluate remaining drawers
-  const now = simulatedTime || new Date();
-  const period = simulatedPeriod || getPeriod(now.getHours(), now.getMinutes());
-  evaluate(period, simulatedFood);
-}
+            // Re-evaluate remaining drawers
+            const now = simulatedTime || new Date();
+            const period = simulatedPeriod || getPeriod(now.getHours(), now.getMinutes());
+            evaluate(period, simulatedFood);
+        }
 
-/* ===== TIME SIMULATION ===== */
-function simulateEvent(h, m, period, food) {
-  simulatedTime = new Date();
-  simulatedTime.setHours(h, m, 0);
-  simulatedPeriod = period;
-  simulatedFood = food;
+        /* ===== TIME SIMULATION ===== */
+        function simulateEvent(h, m, period, food) {
+            simulatedTime = new Date();
+            simulatedTime.setHours(h, m, 0);
+            simulatedPeriod = period;
+            simulatedFood = food;
 
-  document.querySelectorAll(".drawer").forEach(d => d.classList.remove("taken"));
-  evaluate(period, food);
-}
+            document.querySelectorAll(".drawer").forEach(d => d.classList.remove("taken"));
+            evaluate(period, food);
+        }
 
-function returnToLiveTime() {
-  simulatedTime = null;
-  simulatedPeriod = null;
-  simulatedFood = null;
-  document.querySelectorAll(".drawer").forEach(d => d.classList.remove("taken"));
-}
-</script>
+        function returnToLiveTime() {
+            simulatedTime = null;
+            simulatedPeriod = null;
+            simulatedFood = null;
+            document.querySelectorAll(".drawer").forEach(d => d.classList.remove("taken"));
+        }
+    </script>
 
 </body>
+
 </html>
