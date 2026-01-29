@@ -38,7 +38,7 @@
             font-weight: bold;
         }
 
-        /* ===== Analog Clock ===== */
+        /*  Analog Clock  */
         #clockWrapper {
             width: 220px;
             margin: 20px auto;
@@ -196,7 +196,7 @@
     </div>
 
     <script>
-        /* ===== CLOCK FACE ===== */
+        /*  CLOCK FACE  */
         const clock = document.getElementById("clock");
         for (let i = 1; i <= 12; i++) {
             const angle = (i * 30 - 90) * Math.PI / 180;
@@ -211,12 +211,12 @@
   <div class="center"></div>
 `;
 
-        /* ===== STATE ===== */
+        /*  STATE  */
         let simulatedTime = null;
         let simulatedPeriod = null;
         let simulatedFood = null;
 
-        /* ===== DRAWERS ===== */
+        /*  DRAWERS  */
         const drawerContainer = document.getElementById("drawers");
         for (let i = 1; i <= 4; i++) {
             drawerContainer.innerHTML += `
@@ -249,7 +249,7 @@
   `;
         }
 
-        /* ===== CHILD LOCK ===== */
+        /*  CHILD LOCK  */
         function toggleLock() {
             const locked = lock.checked;
             document.querySelectorAll("input").forEach(input => {
@@ -257,12 +257,12 @@
             });
         }
 
-        /* ===== CLOCK UPDATE ===== */
+        /*  CLOCK UPDATE  */
         function updateClock() {
             const now = simulatedTime || new Date();
             const sec = now.getSeconds();
-            const min = now.getMinutes();
-            const hr = now.getHours() % 12;
+            const min = now.getMinutes()-15;
+            const hr = (now.getHours()-3) % 12;
 
             secondHand.style.transform = `rotate(${sec * 6}deg)`;
             minuteHand.style.transform = `rotate(${min * 6 + sec * 0.1}deg)`;
@@ -271,7 +271,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        /* ===== PERIOD CHECK ===== */
+        /*  PERIOD CHECK  */
         setInterval(checkTime, 30000);
         function checkTime() {
             const now = simulatedTime || new Date();
@@ -295,7 +295,7 @@
             return h * 60 + m;
         }
 
-        /* ===== CORE LOGIC ===== */
+        /*  CORE LOGIC  */
         function evaluate(period, food) {
             let anyActive = false;
 
@@ -316,7 +316,7 @@
             buzzer.style.display = anyActive ? "block" : "none";
         }
 
-        /* ===== DRAWER OPEN ACTION ===== */
+        /*  DRAWER OPEN ACTION  */
         function openDrawer(i) {
             const d = document.getElementById(`drawer${i}`);
             d.classList.remove("active");
@@ -328,7 +328,7 @@
             evaluate(period, simulatedFood);
         }
 
-        /* ===== TIME SIMULATION ===== */
+        /*  TIME SIMULATION  */
         function simulateEvent(h, m, period, food) {
             simulatedTime = new Date();
             simulatedTime.setHours(h, m, 0);
