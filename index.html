@@ -150,14 +150,13 @@
 <body>
 
     <h1>EasyDose</h1>
-    <p style="text-align:center;">Software Prototype with Time Simulation</p>
 
     <div id="status">
         <div id="led"></div>
         <div id="buzzer">🔊 TAKE MEDICINE</div>
     </div>
 
-    <h2>Analog Alarm Clock (Current Time)</h2>
+    <h2>Analog Alarm Clock</h2>
 
     <div id="clockWrapper">
         <div id="clock"></div>
@@ -196,7 +195,7 @@
     </div>
 
     <script>
-        /*  CLOCK FACE  */
+        /*  kuch change mat karna waise hi nahi chal rha hai */
         const clock = document.getElementById("clock");
         for (let i = 1; i <= 12; i++) {
             const angle = (i * 30 - 90) * Math.PI / 180;
@@ -211,12 +210,12 @@
   <div class="center"></div>
 `;
 
-        /*  STATE  */
         let simulatedTime = null;
         let simulatedPeriod = null;
         let simulatedFood = null;
 
-        /*  DRAWERS  */
+        /*  Hardik bhai, yaha pe 4 ko change karke drawer number daal dena, aur
+        aur kuch change kiya toh maar khayega  */
         const drawerContainer = document.getElementById("drawers");
         for (let i = 1; i <= 4; i++) {
             drawerContainer.innerHTML += `
@@ -249,7 +248,7 @@
   `;
         }
 
-        /*  CHILD LOCK  */
+        /*  child lock likh de hardik  */
         function toggleLock() {
             const locked = lock.checked;
             document.querySelectorAll("input").forEach(input => {
@@ -257,12 +256,12 @@
             });
         }
 
-        /*  CLOCK UPDATE  */
+        /*  Haath mat lagana yahe pe bc */
         function updateClock() {
             const now = simulatedTime || new Date();
             const sec = now.getSeconds();
-            const min = now.getMinutes()-15;
-            const hr = (now.getHours()-3) % 12;
+            const min = now.getMinutes() - 15;
+            const hr = (now.getHours() - 3) % 12;
 
             secondHand.style.transform = `rotate(${sec * 6}deg)`;
             minuteHand.style.transform = `rotate(${min * 6 + sec * 0.1}deg)`;
@@ -271,7 +270,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        /*  PERIOD CHECK     */
+        /*  Date fetvh ka code   */
         setInterval(checkTime, 30000);
         function checkTime() {
             const now = simulatedTime || new Date();
@@ -295,7 +294,8 @@
             return h * 60 + m;
         }
 
-        /*  CORE LOGIC  */
+        /* ye thik kar diyo zaraa soham
+        */
         function evaluate(period, food) {
             let anyActive = false;
 
@@ -316,19 +316,19 @@
             buzzer.style.display = anyActive ? "block" : "none";
         }
 
-        /*  DRAWER OPEN ACTION  */
+        /*  dont touch  */
         function openDrawer(i) {
             const d = document.getElementById(`drawer${i}`);
             d.classList.remove("active");
             d.classList.add("taken");
 
-            // Re-evaluate remaining drawers
+        
             const now = simulatedTime || new Date();
             const period = simulatedPeriod || getPeriod(now.getHours(), now.getMinutes());
             evaluate(period, simulatedFood);
         }
 
-        /*  TIME SIMULATION  */
+        /* dont touch  */
         function simulateEvent(h, m, period, food) {
             simulatedTime = new Date();
             simulatedTime.setHours(h, m, 0);
